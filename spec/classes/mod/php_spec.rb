@@ -20,29 +20,6 @@ describe 'apache::mod::php', type: :class do
             it { is_expected.to contain_class('apache::mod::prefork') }
           end
           case facts[:os]['release']['major']
-          when '8'
-            context 'on jessie' do
-              it {
-                is_expected.to contain_file('php5.load').with(
-                  content: "LoadModule php5_module /usr/lib/apache2/modules/libphp5.so\n",
-                )
-              }
-              context 'with mpm_module => itk on jessie' do
-                let :pre_condition do
-                  'class { "apache": mpm_module => itk, }'
-                end
-
-                it { is_expected.to contain_class('apache::params') }
-                it { is_expected.to contain_class('apache::mod::itk') }
-                it { is_expected.to contain_apache__mod('php5') }
-                it { is_expected.to contain_package('libapache2-mod-php5') }
-                it {
-                  is_expected.to contain_file('php5.load').with(
-                    content: "LoadModule php5_module /usr/lib/apache2/modules/libphp5.so\n",
-                  )
-                }
-              end
-            end
           when '9'
             context 'on stretch' do
               it { is_expected.to contain_apache__mod('php7.0') }
@@ -230,12 +207,7 @@ describe 'apache::mod::php', type: :class do
       end
 
       # all the following tests are for legacy php/apache versions. They don't work on modern ubuntu and redhat 8
-      next if (facts[:os]['release']['major'].to_i > 15 && facts[:os]['name'] == 'Ubuntu') ||
-              (facts[:os]['release']['major'].to_i >= 15 && facts[:os]['name'] == 'SLES')  ||
-              (facts[:os]['release']['major'].to_i >= 9 && facts[:os]['name'] == 'Debian') ||
-              (facts[:os]['release']['major'].to_i >= 8 && (facts[:os]['name'] == 'RedHat' || facts[:os]['name'] == 'CentOS'))
-
-      describe 'OS independent tests' do
+      describe 'OS independent tests', if: (facts[:os]['family'] == 'Redhat' && facts[:os]['release']['major'].to_i < 8) do
         context 'with content param' do
           let :params do
             { content: 'somecontent' }

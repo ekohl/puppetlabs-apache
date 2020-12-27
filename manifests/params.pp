@@ -425,7 +425,7 @@ class apache::params inherits ::apache::version {
     $secpcrematchlimit = 1500
     $secpcrematchlimitrecursion = 1500
     $modsec_secruleengine = 'On'
-    if ($::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '9') >= 0) or ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '18.04') >= 0) {
+    if $facts['operatingsystem'] == 'Debian' or ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '18.04') >= 0) {
       $modsec_default_rules = [
         'crawlers-user-agents.data',
         'iis-errors.data',
