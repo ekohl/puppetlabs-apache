@@ -77,7 +77,7 @@ describe 'apache::mod::php', type: :class do
               }
             end
           when '16.04'
-            context 'on stretch' do
+            context 'on xenial' do
               let :params do
                 { content: 'somecontent' }
               end
@@ -90,7 +90,7 @@ describe 'apache::mod::php', type: :class do
             end
 
           when '18.04'
-            context 'on stretch' do
+            context 'on bionic' do
               let :params do
                 { content: 'somecontent' }
               end
